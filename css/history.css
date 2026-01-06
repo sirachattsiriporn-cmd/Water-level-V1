@@ -1,0 +1,188 @@
+/* ==================== History Page Specific Styles ==================== */
+
+/* Form Controls */
+.form-control-lg {
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s;
+}
+
+.form-control-lg:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-label {
+    color: #4b5563;
+    margin-bottom: 8px;
+}
+
+/* Button Styles */
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Table Styles */
+#historyTable {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#historyTable thead tr {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+#historyTable thead th {
+    padding: 15px;
+    font-weight: 600;
+    border: none;
+}
+
+#historyTable thead th:first-child {
+    border-top-left-radius: 10px;
+}
+
+#historyTable thead th:last-child {
+    border-top-right-radius: 10px;
+}
+
+#historyTable tbody tr {
+    background: white;
+    transition: all 0.3s;
+}
+
+#historyTable tbody tr:hover {
+    background: #f9fafb;
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#historyTable tbody td {
+    padding: 15px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+/* DataTables Custom Styles */
+.dataTables_wrapper {
+    padding: 20px 0;
+}
+
+.dataTables_filter input {
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    padding: 8px 15px;
+    margin-left: 10px;
+    transition: all 0.3s;
+}
+
+.dataTables_filter input:focus {
+    border-color: #667eea;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.dataTables_length select {
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    padding: 5px 30px 5px 10px;
+    transition: all 0.3s;
+}
+
+.dataTables_length select:focus {
+    border-color: #667eea;
+    outline: none;
+}
+
+/* Pagination */
+.pagination {
+    gap: 5px;
+}
+
+.page-link {
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    color: #667eea;
+    font-weight: 600;
+    padding: 8px 15px;
+    transition: all 0.3s;
+    margin: 0 2px;
+}
+
+.page-link:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.page-item.active .page-link {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+    color: white;
+}
+
+/* Export Buttons */
+.dt-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.dt-button {
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s !important;
+}
+
+.dt-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Status Badge in Table */
+#historyTable .status-badge {
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Info Section */
+.dataTables_info {
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    #historyTable {
+        font-size: 0.85rem;
+    }
+    
+    #historyTable thead th,
+    #historyTable tbody td {
+        padding: 10px 5px;
+    }
+    
+    .dt-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .dt-button {
+        width: 100% !important;
+        margin-bottom: 5px !important;
+    }
+}

@@ -1,0 +1,8 @@
+# ปิด Directory Listing (ไม่ให้เห็นรายชื่อไฟล์เมื่อพิมพ์แค่ชื่อโฟลเดอร์)
+Options -Indexes
+
+# ป้องกันคนเข้าถึงไฟล์ .htaccess นี้โดยตรง
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>
