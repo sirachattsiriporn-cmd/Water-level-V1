@@ -301,12 +301,56 @@ function updateData() {
         .catch(err => console.error('Error updating data:', err));
 }
 
+// ==================== Control Function (NEW: เพิ่มใหม่ส่วนนี้) ====================
+function sendControl(type) {
+    // ดึงค่าจากช่อง Input ตามประเภทที่กด
+    const inputId = 'input_' + type;
+    const value = document.getElementById(inputId).value;
+
+    // ตรวจสอบความถูกต้อง
+    if (value === "") {
+        alert("กรุณากรอกตัวเลขก่อนบันทึก");
+        return;
+    }
+
+    // แสดงสถานะกำลังส่ง (Optional)
+    const btn = event.target;
+    const originalText = btn.innerText;
+    btn.innerText = "Sending...";
+    btn.disabled = true;
+
+    // ส่งข้อมูลไป API
+    fetch('api/mqtt_control.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `type=${type}&value=${value}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status) {
+            alert('บันทึกค่าสำเร็จ! (' + type + ': ' + value + ')');
+            // document.getElementById(inputId).value = ''; // ล้างค่าถ้าต้องการ
+        } else {
+            alert('เกิดข้อผิดพลาด: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('ไม่สามารถเชื่อมต่อกับ Server ได้');
+    })
+    .finally(() => {
+        btn.innerText = originalText;
+        btn.disabled = false;
+    });
+}
+
 // ==================== Initialize Application ====================
 document.addEventListener('DOMContentLoaded', () => {
     initChart();  
     updateData(); // เรียกครั้งแรกทันที
     
     // ตั้งเวลาอัปเดตทุก 1 วินาที (สำหรับ Realtime)
-    // ถ้าต้องการ 1 นาที ให้แก้เป็น 60000
     setInterval(updateData, 1000); 
 });

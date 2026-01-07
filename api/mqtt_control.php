@@ -1,60 +1,59 @@
 <?php
 // api/mqtt_control.php
 header('Content-Type: application/json');
-// ปิด Error Report หน้าเว็บเพื่อไม่ให้ JSON พัง (แต่ Log ลงไฟล์แทนได้)
-error_reporting(0); 
+error_reporting(0); // ปิด Error หน้าเว็บ
 
 require("../includes/phpMQTT.php");
 
-$server = "127.0.0.1";
+// ตั้งค่า MQTT Broker
+$server = "127.0.0.1"; // หรือ IP ของ Node-RED
 $port = 1883;
-$username = "";
-$password = "";
-$client_id = "php_gate_" . uniqid();
+$username = ""; // ใส่ username ถ้ามี
+$password = ""; // ใส่ password ถ้ามี
+$client_id = "php_dashboard_" . uniqid();
 
 $response = array();
-$command = "";
 
-// ---------------------------------------------------------
-// 🟢 ส่วนที่เพิ่ม: พยายามรับค่าจากหลายๆ ทาง (กันเหนียว)
-// ---------------------------------------------------------
+// รับค่าจาก AJAX (POST Method)
+$type = $_POST['type'] ?? '';
+$value = $_POST['value'] ?? '';
 
-// 1. ลองรับจาก JSON (มาตรฐาน)
-$raw_input = file_get_contents('php://input');
-$json_input = json_decode($raw_input, true);
-if (isset($json_input['command'])) {
-    $command = $json_input['command'];
-}
-
-// 2. ถ้าไม่มี ลองรับจาก URL ตรงๆ (GET) -> ไว้ทดสอบพิมพ์ URL เอง
-if (empty($command) && isset($_GET['command'])) {
-    $command = $_GET['command'];
-}
-
-// ---------------------------------------------------------
-
-if (empty($command)) {
-    $response['status'] = false;
-    $response['message'] = "No command received. (Input was empty)";
-    echo json_encode($response);
+// ตรวจสอบว่ามีข้อมูลส่งมาครบถ้วนหรือไม่
+if (empty($type) || $value === '') {
+    echo json_encode(['status' => false, 'message' => 'Missing type or value']);
     exit();
 }
 
-// เชื่อมต่อ MQTT
+// กำหนด Topic ให้ตรงกับ Node-RED ที่ตั้งไว้
+$topic = "";
+switch ($type) {
+    case 'start':
+        $topic = "water/control/start"; // ส่งไป VW4
+        break;
+    case 'stop':
+        $topic = "water/control/stop";  // ส่งไป VW6
+        break;
+    case 'diff':
+        $topic = "water/control/diff";  // ส่งไป VW8
+        break;
+    default:
+        echo json_encode(['status' => false, 'message' => 'Invalid command type']);
+        exit();
+}
+
+// เชื่อมต่อและส่งข้อมูล
 $mqtt = new Bluerhinos\phpMQTT($server, $port, $client_id);
 
 if ($mqtt->connect(true, NULL, $username, $password)) {
-    $topic = "water_monitor/gate/control";
-    $msg = ($command == 'open') ? "1" : "0";
-    
-    $mqtt->publish($topic, $msg, 0);
+    // publish(topic, message, qos)
+    $mqtt->publish($topic, $value, 0); 
     $mqtt->close();
     
     $response['status'] = true;
-    $response['message'] = "Success! Sent '$msg' to MQTT";
+    $response['message'] = "Sent $value to $topic";
 } else {
     $response['status'] = false;
-    $response['message'] = "Connect MQTT Failed. Is Mosquitto running?";
+    $response['message'] = "MQTT Connection Failed";
 }
 
 echo json_encode($response);

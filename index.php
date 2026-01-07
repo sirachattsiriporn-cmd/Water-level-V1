@@ -15,14 +15,17 @@
 <body>
   <?php include 'includes/navbar.php'; ?>
 
-  <!-- Header -->
-  <div class="header-section">
-    <h1><i class="fas fa-tachometer-alt"></i> Water Level Dashboard</h1>
-    <p>ระบบติดตามและแจ้งเตือนระดับน้ำแบบเรียลไทม์</p>
+  <div class="header-section d-flex justify-content-between align-items-center px-4 py-3">
+    <div>
+        <h1><i class="fas fa-tachometer-alt"></i> Water Level Dashboard</h1>
+        <p class="mb-0">ระบบติดตามและแจ้งเตือนระดับน้ำแบบเรียลไทม์</p>
+    </div>
+    <button class="btn btn-warning btn-lg shadow-sm" data-bs-toggle="modal" data-bs-target="#settingsModal">
+        <i class="fas fa-cogs"></i> ตั้งค่าเกณฑ์ควบคุม
+    </button>
   </div>
 
   <div class="container-fluid px-4">
-    <!-- Quick Stats -->
     <div class="quick-stats">
       <div class="stat-card">
         <div class="stat-icon road">
@@ -49,9 +52,7 @@
       </div>
     </div>
 
-    <!-- Custom Gauges -->
     <div class="gauges-grid">
-      <!-- Road Water Level -->
       <div class="gauge-card">
         <div class="gauge-header">
           <div class="gauge-title">
@@ -78,7 +79,6 @@
         </div>
       </div>
 
-      <!-- Canal Water Level -->
       <div class="gauge-card">
         <div class="gauge-header">
           <div class="gauge-title">
@@ -106,7 +106,6 @@
       </div>
     </div>
 
-    <!-- Chart -->
     <div class="glass-card mb-4">
       <div class="card-header-custom">
         <i class="fas fa-chart-line"></i>
@@ -124,11 +123,51 @@
       </div>
     </div>
 
-    <!-- Update Time -->
     <div class="text-center mb-4">
       <div class="update-time">
         <i class="fas fa-sync-alt"></i>
         <span>อัปเดตล่าสุด: <strong id="time_show">กำลังโหลด...</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="settingsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title"><i class="fas fa-sliders-h"></i> ตั้งค่าเกณฑ์ควบคุม (LOGO! PLC)</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4" style="background: #f8f9fa;">
+          
+          <div class="mb-4">
+            <label class="form-label fw-bold text-success"><i class="fas fa-play-circle"></i> ระดับน้ำถนนเริ่มทำงาน (Start)</label>
+            <div class="input-group">
+              <input type="number" id="input_start" class="form-control" placeholder="VW4 (เช่น 500)">
+              <button class="btn btn-success" onclick="sendControl('start')">บันทึก</button>
+            </div>
+            <div class="form-text text-muted">ค่าระดับน้ำที่สั่งให้ประตูน้ำเริ่มเปิดทำงาน</div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-bold text-danger"><i class="fas fa-stop-circle"></i> ระดับน้ำถนนหยุดทำงาน (Stop)</label>
+            <div class="input-group">
+              <input type="number" id="input_stop" class="form-control" placeholder="VW6 (เช่น 450)">
+              <button class="btn btn-danger" onclick="sendControl('stop')">บันทึก</button>
+            </div>
+            <div class="form-text text-muted">ค่าระดับน้ำที่สั่งให้ประตูน้ำหยุดทำงาน</div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label fw-bold text-primary"><i class="fas fa-exchange-alt"></i> เกณฑ์ผลต่างระดับน้ำ (Diff)</label>
+            <div class="input-group">
+              <input type="number" id="input_diff" class="form-control" placeholder="VW8 (เช่น 10)">
+              <button class="btn btn-primary" onclick="sendControl('diff')">บันทึก</button>
+            </div>
+            <div class="form-text text-muted">ต้องมีความต่างมากกว่าค่านี้ ประตูถึงจะทำงาน</div>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
