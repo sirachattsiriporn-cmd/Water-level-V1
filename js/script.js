@@ -301,7 +301,7 @@ function updateData() {
         .catch(err => console.error('Error updating data:', err));
 }
 
-// ==================== Control Function (NEW: เพิ่มใหม่ส่วนนี้) ====================
+// ==================== Control Function ====================
 function sendControl(type) {
     // ดึงค่าจากช่อง Input ตามประเภทที่กด
     const inputId = 'input_' + type;
@@ -346,11 +346,34 @@ function sendControl(type) {
     });
 }
 
+// ==================== [เพิ่มใหม่] Realtime Clock Function ====================
+function updateRealtimeClock() {
+    const now = new Date();
+    // ตั้งค่ารูปแบบวันที่ภาษาไทย
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+       
+    };
+    
+    // แปลงเป็น String
+    const dateString = now.toLocaleDateString('th-TH', options);
+    
+    // แสดงผลที่ Header (ถ้ามี Element)
+    const dateElement = document.getElementById('current_date_display');
+    if (dateElement) {
+        dateElement.innerText = dateString;
+    }
+}
+
 // ==================== Initialize Application ====================
 document.addEventListener('DOMContentLoaded', () => {
     initChart();  
     updateData(); // เรียกครั้งแรกทันที
+    updateRealtimeClock(); // [เพิ่ม] เรียกนาฬิกาทันที
     
     // ตั้งเวลาอัปเดตทุก 1 วินาที (สำหรับ Realtime)
     setInterval(updateData, 1000); 
+    setInterval(updateRealtimeClock, 1000); // [เพิ่ม] อัปเดตนาฬิกาทุก 1 วินาที
 });

@@ -16,10 +16,14 @@
   <?php include 'includes/navbar.php'; ?>
 
   <div class="header-section d-flex justify-content-between align-items-center px-4 py-3">
-    <div>
-        <h1><i class="fas fa-tachometer-alt"></i> Water Level Dashboard</h1>
-        <p class="mb-0">ระบบติดตามและแจ้งเตือนระดับน้ำแบบเรียลไทม์</p>
+    
+    <div class="d-flex align-items-center">
+        <div>
+            <h1><i class="fas fa-tachometer-alt"></i> Water Level Dashboard</h1>
+            <p class="mb-0">ระบบติดตามและแจ้งเตือนระดับน้ำแบบเรียลไทม์</p>
+        </div>    
     </div>
+
     <button class="btn btn-warning btn-lg shadow-sm" data-bs-toggle="modal" data-bs-target="#settingsModal">
         <i class="fas fa-cogs"></i> ตั้งค่าเกณฑ์ควบคุม
     </button>
@@ -47,6 +51,7 @@
         <div class="stat-icon time">
           <i class="fas fa-clock"></i>
         </div>
+        <div id="current_date_display" class="h5 mb-0 fw-bold text-dar" style="min-width: 200px;"></div>
         <div class="stat-value" id="time-stat" style="font-size: 1.2rem;">--</div>
         <div class="stat-label">อัปเดตล่าสุด</div>
       </div>
