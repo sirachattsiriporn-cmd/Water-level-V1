@@ -16,7 +16,6 @@
   <?php include 'includes/navbar.php'; ?>
 
   <div class="header-section d-flex justify-content-between align-items-center px-4 py-3">
-    
     <div class="d-flex align-items-center">
         <div>
             <h1><i class="fas fa-tachometer-alt"></i> Water Level Dashboard</h1>
@@ -51,7 +50,7 @@
         <div class="stat-icon time">
           <i class="fas fa-clock"></i>
         </div>
-        <div id="current_date_display" class="h5 mb-0 fw-bold text-dar" style="min-width: 200px;"></div>
+        <div id="current_date_display" class="h6 mb-0 fw-bold text-secondary">Loading...</div>
         <div class="stat-value" id="time-stat" style="font-size: 1.2rem;">--</div>
         <div class="stat-label">อัปเดตล่าสุด</div>
       </div>
@@ -111,6 +110,40 @@
       </div>
     </div>
 
+    <div class="row mt-4 mb-4">
+      <div class="col-12">
+        <div class="card shadow-sm border-0" style="border-radius: 15px;">
+          <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            
+            <div>
+                <h5 class="mb-1 fw-bold"><i class="fas fa-dungeon text-secondary"></i> สถานะประตูน้ำ (Water Gate)</h5>
+                <p class="text-muted mb-0 small">ติดตามสถานะ Q1 (เปิด) และ Q2 (ปิด) จาก LOGO! PLC</p>
+            </div>
+
+            <div class="d-flex align-items-center gap-4">
+                
+                <div class="text-center px-3 py-2 rounded" id="status-box-open" style="background: #f0f0f0; min-width: 120px; transition: all 0.3s;">
+                    <i class="fas fa-arrow-up mb-1" id="icon-q1" style="font-size: 1.5rem; color: #ccc;"></i>
+                    <div class="fw-bold small text-muted" id="text-q1">Open (Q1)</div>
+                </div>
+
+                <div class="text-center px-3 py-2 rounded" id="status-box-close" style="background: #f0f0f0; min-width: 120px; transition: all 0.3s;">
+                    <i class="fas fa-arrow-down mb-1" id="icon-q2" style="font-size: 1.5rem; color: #ccc;"></i>
+                    <div class="fw-bold small text-muted" id="text-q2">Close (Q2)</div>
+                </div>
+
+                <div class="ms-3 text-end d-none d-sm-block">
+                    <div class="small text-muted">สถานะปัจจุบัน</div>
+                    <div class="h4 fw-bold mb-0" id="gate-main-status">
+                        <span class="badge bg-secondary">Standby</span>
+                    </div>
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="glass-card mb-4">
       <div class="card-header-custom">
         <i class="fas fa-chart-line"></i>

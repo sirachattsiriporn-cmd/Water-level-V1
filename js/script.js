@@ -103,6 +103,50 @@ function updateGaugeStatus(valueId, statusId, dotId, value) {
     }
 }
 
+// ==================== [ส่วนที่เพิ่มใหม่] ฟังก์ชันอัปเดตสถานะประตูน้ำ (Q1/Q2) ====================
+function updateGateStatus(q1, q2) {
+    const boxOpen = document.getElementById('status-box-open');
+    const iconQ1 = document.getElementById('icon-q1');
+    const textQ1 = document.getElementById('text-q1');
+
+    const boxClose = document.getElementById('status-box-close');
+    const iconQ2 = document.getElementById('icon-q2');
+    const textQ2 = document.getElementById('text-q2');
+
+    const mainStatus = document.getElementById('gate-main-status');
+
+    // 1. รีเซ็ตสถานะเป็นค่าเริ่มต้น (สีเทา) เพื่อเตรียมเปลี่ยนสี
+    if(boxOpen) boxOpen.style.background = "#f0f0f0";
+    if(iconQ1) iconQ1.style.color = "#ccc";
+    if(textQ1) textQ1.className = "fw-bold small text-muted";
+
+    if(boxClose) boxClose.style.background = "#f0f0f0";
+    if(iconQ2) iconQ2.style.color = "#ccc";
+    if(textQ2) textQ2.className = "fw-bold small text-muted";
+    
+    // 2. ตรวจสอบสถานะและเปลี่ยนสีตามค่าที่รับมา
+    if (q1 == 1) {
+        // ประตูเปิด (Q1 = 1) -> สีเขียว
+        if(boxOpen) boxOpen.style.background = "#dcfce7";
+        if(iconQ1) iconQ1.style.color = "#16a34a";
+        if(textQ1) textQ1.className = "fw-bold small text-success";
+        
+        if(mainStatus) mainStatus.innerHTML = '<span class="badge bg-success"><i class="fas fa-spinner fa-spin"></i> Opening...</span>';
+    } 
+    else if (q2 == 1) {
+        // ประตูปิด (Q2 = 1) -> สีแดง
+        if(boxClose) boxClose.style.background = "#fee2e2";
+        if(iconQ2) iconQ2.style.color = "#dc2626";
+        if(textQ2) textQ2.className = "fw-bold small text-danger";
+        
+        if(mainStatus) mainStatus.innerHTML = '<span class="badge bg-danger"><i class="fas fa-spinner fa-spin"></i> Closing...</span>';
+    } 
+    else {
+        // สถานะหยุดนิ่ง (Standby)
+        if(mainStatus) mainStatus.innerHTML = '<span class="badge bg-secondary">Standby</span>';
+    }
+}
+
 // ==================== Initialize Chart ====================
 function initChart() {
     const ctx = document.getElementById('waterChart').getContext('2d');
@@ -277,6 +321,15 @@ function updateData() {
                 // อัปเดต Custom Gauge - Canal (พร้อมเปลี่ยนสี)
                 updateGauge('canalWater', 'canalRing', canalVal);
                 updateGaugeStatus('canalValue', 'canalStatus', 'canal-dot', canalVal);
+                
+                // ==================== [ส่วนที่เพิ่มใหม่] เรียกใช้ฟังก์ชันอัปเดตประตูน้ำ ====================
+                // ดึงค่าสถานะจาก API (ถ้าไม่มีข้อมูลให้เป็น 0)
+                const q1 = parseInt(data.q1_status || 0);
+                const q2 = parseInt(data.q2_status || 0);
+                
+                // ส่งค่าไปอัปเดต UI
+                updateGateStatus(q1, q2);
+                // ===================================================================================
 
                 // อัปเดต Chart
                 if (myChart) {
@@ -346,7 +399,7 @@ function sendControl(type) {
     });
 }
 
-// ==================== [เพิ่มใหม่] Realtime Clock Function ====================
+// ==================== Realtime Clock Function ====================
 function updateRealtimeClock() {
     const now = new Date();
     // ตั้งค่ารูปแบบวันที่ภาษาไทย
@@ -354,7 +407,7 @@ function updateRealtimeClock() {
         year: 'numeric', 
         month: 'long', 
         day: 'numeric',
-       
+        
     };
     
     // แปลงเป็น String
@@ -367,13 +420,37 @@ function updateRealtimeClock() {
     }
 }
 
+// ==================== [ส่วนที่เพิ่มใหม่] ดึงค่า Setting ล่าสุดมาโชว์ใน Input ====================
+function loadCurrentSettings() {
+    fetch('api/get_settings.php') // เรียกไฟล์ PHP ที่เราสร้างใหม่
+        .then(response => response.json())
+        .then(data => {
+            // เช็ค ID ให้ตรงกับหน้า HTML: input_start, input_stop, input_diff
+            
+            // ช่อง Start (VW4)
+            const inputStart = document.getElementById('input_start'); 
+            if (inputStart) inputStart.value = data.start_val;
+            
+            // ช่อง Stop (VW6)
+            const inputStop = document.getElementById('input_stop'); 
+            if (inputStop) inputStop.value = data.stop_val;
+            
+            // ช่อง Diff (VW8)
+            const inputDiff = document.getElementById('input_diff'); 
+            if (inputDiff) inputDiff.value = data.diff_val;
+        })
+        .catch(err => console.error('Error loading settings:', err));
+}
+
 // ==================== Initialize Application ====================
 document.addEventListener('DOMContentLoaded', () => {
     initChart();  
-    updateData(); // เรียกครั้งแรกทันที
-    updateRealtimeClock(); // [เพิ่ม] เรียกนาฬิกาทันที
+    updateData(); 
+    updateRealtimeClock();
+    
+    loadCurrentSettings(); // <--- **** เพิ่มบรรทัดนี้เข้าไปครับ ****
     
     // ตั้งเวลาอัปเดตทุก 1 วินาที (สำหรับ Realtime)
     setInterval(updateData, 1000); 
-    setInterval(updateRealtimeClock, 1000); // [เพิ่ม] อัปเดตนาฬิกาทุก 1 วินาที
+    setInterval(updateRealtimeClock, 1000); 
 });

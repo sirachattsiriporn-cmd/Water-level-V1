@@ -4,6 +4,7 @@ require_once 'configs/db_connect.php';
 $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d');
 $end_date   = isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d');
 
+// SQL ดึงข้อมูลรวมถึง q1_status และ q2_status (ใช้ * ก็ได้เพราะเพิ่ม col แล้ว)
 $sql = "SELECT * FROM log_levels 
         WHERE DATE(log_time) BETWEEN '$start_date' AND '$end_date' 
         ORDER BY log_time DESC";
@@ -30,7 +31,6 @@ $result = $conn->query($sql);
     <?php include 'includes/navbar.php'; ?>
 
     <div class="container-fluid px-4 py-4">
-        <!-- Header -->
         <div class="header-section">
             <h1><i class="fas fa-history"></i> ประวัติข้อมูลระดับน้ำ</h1>
             <p>ดูและวิเคราะห์ข้อมูลย้อนหลังตามช่วงเวลาที่ต้องการ</p>
@@ -72,9 +72,11 @@ $result = $conn->query($sql);
                                 <th><i class="fas fa-hashtag"></i> ID</th>
                                 <th><i class="fas fa-clock"></i> Timestamp</th>
                                 <th><i class="fas fa-road"></i> Road (cm)</th>
-                                <th><i class="fas fa-signal"></i> Status Road</th>
+                                <th><i class="fas fa-signal"></i> Status</th>
                                 <th><i class="fas fa-water"></i> Canal (cm)</th>
-                                <th><i class="fas fa-signal"></i> Status Canal</th>
+                                <th><i class="fas fa-signal"></i> Status</th>
+                                <th><i class="fas fa-arrow-up"></i> Gate Q1</th>
+                                <th><i class="fas fa-arrow-down"></i> Gate Q2</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -105,6 +107,27 @@ $result = $conn->query($sql);
                                                 }
                                             ?>
                                         </td>
+
+                                        <td>
+                                            <?php if ($row['q1_status'] == 1): ?>
+                                                <span class="badge bg-success rounded-pill px-3">
+                                                    <i class="fas fa-check"></i> Open
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="badge bg-light text-secondary border rounded-pill px-3">Off</span>
+                                            <?php endif; ?>
+                                        </td>
+
+                                        <td>
+                                            <?php if ($row['q2_status'] == 1): ?>
+                                                <span class="badge bg-danger rounded-pill px-3">
+                                                    <i class="fas fa-check"></i> Close
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="badge bg-light text-secondary border rounded-pill px-3">Off</span>
+                                            <?php endif; ?>
+                                        </td>
+
                                     </tr>
                                 <?php endwhile; ?>
                             <?php endif; ?>
