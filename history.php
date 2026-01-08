@@ -75,8 +75,7 @@ $result = $conn->query($sql);
                                 <th><i class="fas fa-signal"></i> Status</th>
                                 <th><i class="fas fa-water"></i> Canal (cm)</th>
                                 <th><i class="fas fa-signal"></i> Status</th>
-                                <th><i class="fas fa-arrow-up"></i> Gate Q1</th>
-                                <th><i class="fas fa-arrow-down"></i> Gate Q2</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -106,26 +105,6 @@ $result = $conn->query($sql);
                                                     echo '<span class="status-badge reading"><i class="fas fa-check-circle"></i> Reading</span>';
                                                 }
                                             ?>
-                                        </td>
-
-                                        <td>
-                                            <?php if ($row['q1_status'] == 1): ?>
-                                                <span class="badge bg-success rounded-pill px-3">
-                                                    <i class="fas fa-check"></i> Open
-                                                </span>
-                                            <?php else: ?>
-                                                <span class="badge bg-light text-secondary border rounded-pill px-3">Off</span>
-                                            <?php endif; ?>
-                                        </td>
-
-                                        <td>
-                                            <?php if ($row['q2_status'] == 1): ?>
-                                                <span class="badge bg-danger rounded-pill px-3">
-                                                    <i class="fas fa-check"></i> Close
-                                                </span>
-                                            <?php else: ?>
-                                                <span class="badge bg-light text-secondary border rounded-pill px-3">Off</span>
-                                            <?php endif; ?>
                                         </td>
 
                                     </tr>

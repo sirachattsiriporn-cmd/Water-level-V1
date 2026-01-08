@@ -4,7 +4,7 @@ header('Content-Type: application/json; charset=UTF-8');
 require_once '../configs/db_connect.php';
 
 // ดึงข้อมูล 20 รายการล่าสุด (เพิ่ม q1_status, q2_status)
-$sql = "SELECT road_val, canal_val, log_time, q1_status, q2_status FROM log_levels ORDER BY id DESC LIMIT 20";
+$sql = "SELECT road_val, canal_val, log_time FROM log_levels ORDER BY id DESC LIMIT 20";
 $result = $conn->query($sql);
 
 $data = array();
