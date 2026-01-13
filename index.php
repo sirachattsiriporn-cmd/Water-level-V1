@@ -196,7 +196,7 @@
             <div class="form-text text-muted">ค่าระดับน้ำที่สั่งให้ประตูน้ำหยุดทำงาน</div>
           </div>
 
-          <div class="mb-2">
+          <div class="mb-4">
             <label class="form-label fw-bold text-primary"><i class="fas fa-exchange-alt"></i> เกณฑ์ผลต่างระดับน้ำ (Diff)</label>
             <div class="input-group">
               <input type="number" id="input_diff" class="form-control" placeholder="VW8 (เช่น 10)">
@@ -205,7 +205,22 @@
             <div class="form-text text-muted">ต้องมีความต่างมากกว่าค่านี้ ประตูถึงจะทำงาน</div>
           </div>
 
-        </div>
+          <div class="mb-2">
+            <label class="form-label fw-bold text-dark"><i class="fas fa-clock"></i> เวลาปิดประตูน้ำ (Close Time)</label>
+            
+            <div class="input-group">
+                <input type="number" id="input_min" class="form-control text-center" placeholder="นาที" min="0">
+                
+                <span class="input-group-text bg-light fw-bold">:</span>
+                
+                <input type="number" id="input_sec" class="form-control text-center" placeholder="วินาที" min="0" max="59">
+                
+                <button class="btn btn-dark" onclick="sendControl('close_time')">บันทึก</button>
+            </div>
+            
+            <div class="form-text text-muted">ระบุเวลา (นาที : วินาที) ที่ต้องการปิดประตู</div>
+          </div>
+          </div>
       </div>
     </div>
   </div>

@@ -13,39 +13,15 @@ function getWaterLevelClass(value) {
 // ==================== Get Status Info ====================
 function getStatusInfo(value) {
     if (value < 0) {
-        return {
-            badge: 'failed',
-            dot: 'failed',
-            ring: 'ring-failed',
-            icon: 'fa-times-circle',
-            text: 'Failed'
-        };
+        return { badge: 'failed', dot: 'failed', ring: 'ring-failed', icon: 'fa-times-circle', text: 'Failed' };
     }
     if (value < 40) {
-        return {
-            badge: 'safe',
-            dot: 'safe',
-            ring: 'ring-safe',
-            icon: 'fa-check-circle',
-            text: 'Safe'
-        };
+        return { badge: 'safe', dot: 'safe', ring: 'ring-safe', icon: 'fa-check-circle', text: 'Safe' };
     }
     if (value < 70) {
-        return {
-            badge: 'warning',
-            dot: 'warning',
-            ring: 'ring-warning',
-            icon: 'fa-exclamation-triangle',
-            text: 'Warning'
-        };
+        return { badge: 'warning', dot: 'warning', ring: 'ring-warning', icon: 'fa-exclamation-triangle', text: 'Warning' };
     }
-    return {
-        badge: 'danger',
-        dot: 'danger',
-        ring: 'ring-danger',
-        icon: 'fa-exclamation-circle',
-        text: 'Danger'
-    };
+    return { badge: 'danger', dot: 'danger', ring: 'ring-danger', icon: 'fa-exclamation-circle', text: 'Danger' };
 }
 
 // ==================== Update Gauge Water Level ====================
@@ -55,7 +31,6 @@ function updateGauge(waterId, ringId, value, maxValue = 100) {
     
     if (!waterElement) return;
     
-    // คำนวณเปอร์เซ็นต์
     let percentage;
     if (value < 0) {
         percentage = 0;
@@ -63,14 +38,11 @@ function updateGauge(waterId, ringId, value, maxValue = 100) {
         percentage = Math.min(100, (value / maxValue) * 100);
     }
     
-    // อัปเดตความสูงของน้ำ
     waterElement.style.height = percentage + '%';
     
-    // เปลี่ยนสีของน้ำตามระดับ
     const levelClass = getWaterLevelClass(value);
     waterElement.className = 'gauge-water ' + levelClass;
     
-    // เปลี่ยนสีของ ring
     const statusInfo = getStatusInfo(value);
     if (ringElement) {
         ringElement.className = 'gauge-ring ' + statusInfo.ring;
@@ -83,27 +55,23 @@ function updateGaugeStatus(valueId, statusId, dotId, value) {
     const statusElement = document.getElementById(statusId);
     const dotElement = document.getElementById(dotId);
     
-    // อัปเดตค่าตัวเลข
     if (valueElement) {
         valueElement.textContent = parseFloat(value).toFixed(1);
     }
     
-    // ดึงข้อมูลสถานะ
     const statusInfo = getStatusInfo(value);
     
-    // อัปเดต Status Badge
     if (statusElement) {
         statusElement.className = 'status-badge ' + statusInfo.badge;
         statusElement.innerHTML = `<i class="fas ${statusInfo.icon}"></i> ${statusInfo.text}`;
     }
     
-    // อัปเดต Status Dot
     if (dotElement) {
         dotElement.className = 'status-dot ' + statusInfo.dot;
     }
 }
 
-// ==================== [ส่วนที่เพิ่มใหม่] ฟังก์ชันอัปเดตสถานะประตูน้ำ (Q1/Q2) ====================
+// ==================== ฟังก์ชันอัปเดตสถานะประตูน้ำ (Q1/Q2) ====================
 function updateGateStatus(q1, q2) {
     const boxOpen = document.getElementById('status-box-open');
     const iconQ1 = document.getElementById('icon-q1');
@@ -115,7 +83,7 @@ function updateGateStatus(q1, q2) {
 
     const mainStatus = document.getElementById('gate-main-status');
 
-    // 1. รีเซ็ตสถานะเป็นค่าเริ่มต้น (สีเทา) เพื่อเตรียมเปลี่ยนสี
+    // 1. รีเซ็ตสถานะเป็นค่าเริ่มต้น
     if(boxOpen) boxOpen.style.background = "#f0f0f0";
     if(iconQ1) iconQ1.style.color = "#ccc";
     if(textQ1) textQ1.className = "fw-bold small text-muted";
@@ -124,9 +92,8 @@ function updateGateStatus(q1, q2) {
     if(iconQ2) iconQ2.style.color = "#ccc";
     if(textQ2) textQ2.className = "fw-bold small text-muted";
     
-    // 2. ตรวจสอบสถานะและเปลี่ยนสีตามค่าที่รับมา
+    // 2. ตรวจสอบสถานะ
     if (q1 == 1) {
-        // ประตูเปิด (Q1 = 1) -> สีเขียว
         if(boxOpen) boxOpen.style.background = "#dcfce7";
         if(iconQ1) iconQ1.style.color = "#16a34a";
         if(textQ1) textQ1.className = "fw-bold small text-success";
@@ -134,7 +101,6 @@ function updateGateStatus(q1, q2) {
         if(mainStatus) mainStatus.innerHTML = '<span class="badge bg-success"><i class="fas fa-spinner fa-spin"></i> Opening...</span>';
     } 
     else if (q2 == 1) {
-        // ประตูปิด (Q2 = 1) -> สีแดง
         if(boxClose) boxClose.style.background = "#fee2e2";
         if(iconQ2) iconQ2.style.color = "#dc2626";
         if(textQ2) textQ2.className = "fw-bold small text-danger";
@@ -142,7 +108,6 @@ function updateGateStatus(q1, q2) {
         if(mainStatus) mainStatus.innerHTML = '<span class="badge bg-danger"><i class="fas fa-spinner fa-spin"></i> Closing...</span>';
     } 
     else {
-        // สถานะหยุดนิ่ง (Standby)
         if(mainStatus) mainStatus.innerHTML = '<span class="badge bg-secondary">Standby</span>';
     }
 }
@@ -195,83 +160,30 @@ function initChart() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false
-            },
+            interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        usePointStyle: true,
-                        padding: 20,
-                        font: {
-                            size: 13,
-                            weight: '600'
-                        }
-                    }
-                },
+                legend: { display: true, position: 'top' },
                 tooltip: {
                     mode: 'index',
                     intersect: false,
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    titleFont: {
-                        size: 14,
-                        weight: 'bold'
-                    },
-                    bodyFont: {
-                        size: 13
-                    },
-                    cornerRadius: 8,
                     callbacks: {
                         label: function(context) {
                             let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
+                            if (label) label += ': ';
                             label += context.parsed.y.toFixed(1) + ' cm';
-                            
-                            // เพิ่มสถานะในแต่ละจุด
                             const value = context.parsed.y;
                             const statusInfo = getStatusInfo(value);
                             label += ' (' + statusInfo.text + ')';
-                            
                             return label;
                         }
                     }
                 }
             },
             scales: {
-                y: {
-                    min: 0,
-                    max: 100,
-                    ticks: {
-                        stepSize: 10,
-                        font: {
-                            size: 12
-                        }
-                    },
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        font: {
-                            size: 11
-                        }
-                    }
-                }
+                y: { min: 0, max: 100 },
+                x: { grid: { display: false } }
             },
-            animation: {
-                duration: 750,
-                easing: 'easeInOutQuart'
-            }
+            animation: { duration: 750, easing: 'easeInOutQuart' }
         }
     });
 
@@ -314,22 +226,17 @@ function updateData() {
                 document.getElementById('road-stat').innerText = roadVal.toFixed(1);
                 document.getElementById('canal-stat').innerText = canalVal.toFixed(1);
 
-                // อัปเดต Custom Gauge - Road (พร้อมเปลี่ยนสี)
+                // อัปเดต Gauges
                 updateGauge('roadWater', 'roadRing', roadVal);
                 updateGaugeStatus('roadValue', 'roadStatus', 'road-dot', roadVal);
 
-                // อัปเดต Custom Gauge - Canal (พร้อมเปลี่ยนสี)
                 updateGauge('canalWater', 'canalRing', canalVal);
                 updateGaugeStatus('canalValue', 'canalStatus', 'canal-dot', canalVal);
                 
-                // ==================== [ส่วนที่เพิ่มใหม่] เรียกใช้ฟังก์ชันอัปเดตประตูน้ำ ====================
-                // ดึงค่าสถานะจาก API (ถ้าไม่มีข้อมูลให้เป็น 0)
+                // อัปเดตสถานะประตูน้ำ
                 const q1 = parseInt(data.q1_status || 0);
                 const q2 = parseInt(data.q2_status || 0);
-                
-                // ส่งค่าไปอัปเดต UI
                 updateGateStatus(q1, q2);
-                // ===================================================================================
 
                 // อัปเดต Chart
                 if (myChart) {
@@ -340,7 +247,6 @@ function updateData() {
                         myChart.data.datasets[0].data.push(roadVal);
                         myChart.data.datasets[1].data.push(canalVal);
 
-                        // เก็บข้อมูลแค่ 30 จุดล่าสุด
                         if (myChart.data.labels.length > 30) { 
                             myChart.data.labels.shift();
                             myChart.data.datasets[0].data.shift();
@@ -354,37 +260,71 @@ function updateData() {
         .catch(err => console.error('Error updating data:', err));
 }
 
-// ==================== Control Function ====================
+// ==================== Control Function (Start/Stop/Diff) ====================
+// ==================== Control Function (Unified) ====================
 function sendControl(type) {
-    // ดึงค่าจากช่อง Input ตามประเภทที่กด
-    const inputId = 'input_' + type;
-    const value = document.getElementById(inputId).value;
+    let valueToSend = "";
+    let alertMessage = "";
 
-    // ตรวจสอบความถูกต้อง
-    if (value === "") {
-        alert("กรุณากรอกตัวเลขก่อนบันทึก");
-        return;
+    // ----------------------------------------------------
+    // กรณีที่ 1: เป็นการตั้งค่าเวลา (Close Time) ที่มี 2 ช่อง
+    // ----------------------------------------------------
+    if (type === 'close_time') {
+        let min = document.getElementById('input_min').value;
+        let sec = document.getElementById('input_sec').value;
+
+        // ถ้าค่าว่าง ให้ถือเป็น 0
+        if (min === "") min = "0";
+        if (sec === "") sec = "0";
+
+        // รวมร่างเป็นรูปแบบ "นาที:วินาที"
+        valueToSend = min + ":" + sec;
+        alertMessage = `เวลาปิดประตู: ${min} นาที ${sec} วินาที`;
+    } 
+    // ----------------------------------------------------
+    // กรณีที่ 2: เป็นการตั้งค่าทั่วไป (Start, Stop, Diff) ที่มี 1 ช่อง
+    // ----------------------------------------------------
+    else {
+        const inputId = 'input_' + type;
+        const inputElement = document.getElementById(inputId);
+
+        if (!inputElement) {
+            console.error("Input not found: " + inputId);
+            return;
+        }
+
+        valueToSend = inputElement.value;
+
+        if (valueToSend === "") {
+            alert("กรุณากรอกตัวเลขก่อนบันทึก");
+            return;
+        }
+        
+        alertMessage = `ค่า ${type}: ${valueToSend}`;
     }
 
-    // แสดงสถานะกำลังส่ง (Optional)
+    // ----------------------------------------------------
+    // ส่วนส่งข้อมูล (ใช้ร่วมกัน)
+    // ----------------------------------------------------
     const btn = event.target;
-    const originalText = btn.innerText;
-    btn.innerText = "Sending...";
-    btn.disabled = true;
+    // ใช้ closest('button') เผื่อกรณี user กดไปโดนไอคอนข้างในปุ่ม
+    const targetBtn = btn.closest('button') || btn; 
+    
+    const originalHTML = targetBtn.innerHTML;
+    targetBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    targetBtn.disabled = true;
 
-    // ส่งข้อมูลไป API
     fetch('api/mqtt_control.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `type=${type}&value=${value}`
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `type=${type}&value=${valueToSend}`
     })
     .then(response => response.json())
     .then(data => {
         if (data.status) {
-            alert('บันทึกค่าสำเร็จ! (' + type + ': ' + value + ')');
-            // document.getElementById(inputId).value = ''; // ล้างค่าถ้าต้องการ
+            alert('บันทึกสำเร็จ! (' + alertMessage + ')');
+            // ถ้าอยากให้โหลดค่าใหม่มาโชว์ทันที
+            // loadCurrentSettings(); 
         } else {
             alert('เกิดข้อผิดพลาด: ' + data.message);
         }
@@ -394,50 +334,54 @@ function sendControl(type) {
         alert('ไม่สามารถเชื่อมต่อกับ Server ได้');
     })
     .finally(() => {
-        btn.innerText = originalText;
-        btn.disabled = false;
+        targetBtn.innerHTML = originalHTML;
+        targetBtn.disabled = false;
     });
 }
-
 // ==================== Realtime Clock Function ====================
 function updateRealtimeClock() {
     const now = new Date();
-    // ตั้งค่ารูปแบบวันที่ภาษาไทย
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        
-    };
-    
-    // แปลงเป็น String
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const dateString = now.toLocaleDateString('th-TH', options);
     
-    // แสดงผลที่ Header (ถ้ามี Element)
     const dateElement = document.getElementById('current_date_display');
     if (dateElement) {
         dateElement.innerText = dateString;
     }
 }
 
-// ==================== [ส่วนที่เพิ่มใหม่] ดึงค่า Setting ล่าสุดมาโชว์ใน Input ====================
+// ==================== [อัปเดต] ดึงค่า Setting ล่าสุดมาโชว์ ====================
 function loadCurrentSettings() {
-    fetch('api/get_settings.php') // เรียกไฟล์ PHP ที่เราสร้างใหม่
+    fetch('api/get_settings.php')
         .then(response => response.json())
         .then(data => {
-            // เช็ค ID ให้ตรงกับหน้า HTML: input_start, input_stop, input_diff
-            
-            // ช่อง Start (VW4)
+            // เช็ค ID ให้ตรงกับหน้า HTML
             const inputStart = document.getElementById('input_start'); 
             if (inputStart) inputStart.value = data.start_val;
             
-            // ช่อง Stop (VW6)
             const inputStop = document.getElementById('input_stop'); 
             if (inputStop) inputStop.value = data.stop_val;
             
-            // ช่อง Diff (VW8)
             const inputDiff = document.getElementById('input_diff'); 
             if (inputDiff) inputDiff.value = data.diff_val;
+
+            // [ส่วนที่แก้เพิ่ม] สำหรับ Close Time (แปลงวินาทีรวมจาก DB -> นาที/วินาที)
+            if (data.close_time_val !== undefined && data.close_time_val !== null) {
+                let totalSec = parseInt(data.close_time_val);
+                
+                if (!isNaN(totalSec)) {
+                    // คำนวณกลับ
+                    let minutes = Math.floor(totalSec / 60); // หารเอาจำนวนเต็ม (นาที)
+                    let seconds = totalSec % 60;             // เศษที่เหลือ (วินาที)
+
+                    // ใส่ค่าลง 2 ช่องใหม่
+                    const inputMin = document.getElementById('input_min');
+                    const inputSec = document.getElementById('input_sec');
+
+                    if (inputMin) inputMin.value = minutes;
+                    if (inputSec) inputSec.value = seconds;
+                }
+            }
         })
         .catch(err => console.error('Error loading settings:', err));
 }
@@ -448,9 +392,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateData(); 
     updateRealtimeClock();
     
-    loadCurrentSettings(); // <--- **** เพิ่มบรรทัดนี้เข้าไปครับ ****
+    loadCurrentSettings(); 
     
-    // ตั้งเวลาอัปเดตทุก 1 วินาที (สำหรับ Realtime)
     setInterval(updateData, 1000); 
     setInterval(updateRealtimeClock, 1000); 
 });
