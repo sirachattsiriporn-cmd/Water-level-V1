@@ -1,7 +1,9 @@
-# ปิด Directory Listing (ไม่ให้เห็นรายชื่อไฟล์เมื่อพิมพ์แค่ชื่อโฟลเดอร์)
+# ไฟล์: /.htaccess (ตัวหลัก)
+
+# 1. ปิดไม่ให้เห็นรายชื่อไฟล์เวลากดเข้าโฟลเดอร์เปล่าๆ
 Options -Indexes
 
-# ป้องกันคนเข้าถึงไฟล์ .htaccess นี้โดยตรง
+# 2. ป้องกันไม่ให้ใครมาแอบอ่านไฟล์ .htaccess นี้
 <Files .htaccess>
     Order allow,deny
     Deny from all

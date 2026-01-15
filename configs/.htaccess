@@ -1,3 +1,12 @@
-# ห้ามใครเข้าถึงไฟล์ในโฟลเดอร์นี้ผ่าน Browser ทุกกรณี
-Order deny,allow
-Deny from all
+# ป้องกันไม่ให้ใครเข้าถึงไฟล์ในโฟลเดอร์นี้ผ่าน Browser
+<FilesMatch "\.(php|sql|ini|conf)$">
+    # สำหรับ Apache 2.4 ขึ้นไป
+    Require all denied
+    
+    # สำหรับ Apache 2.2 (เผื่อใช้ Server เก่า)
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ป้องกันการมองเห็นรายการไฟล์ (Directory Listing)
+Options -Indexes
